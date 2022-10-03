@@ -1,0 +1,41 @@
+{
+  "name": "wpstarter/wpstarter",
+  "description": "Wordpress Starter",
+  "keywords": ["wordpress", "starter"],
+  "license": "none",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "type": "project",
+  "require": {
+    "php": "^7.3|^8.0",
+    "ext-openssl": "*",
+    "ext-json": "*",
+    "wpstarter/framework": "^1.0"
+  },
+  "require-dev": {
+    "filp/whoops": "^2.14.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    },
+    "files": [
+
+    ]
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "WpStarter\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ],
+    "post-update-cmd": [
+      "@php artisan vendor:publish --tag=ws-assets --ansi --force"
+    ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate --ansi"
+    ]
+  }
+}
