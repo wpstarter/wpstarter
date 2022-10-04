@@ -128,7 +128,7 @@ return [
 
     'cookie' => ws_env(
         'SESSION_COOKIE',
-        Str::slug(ws_env('APP_NAME', 'laravel'), '_').'_session'
+        Str::slug(ws_env('APP_NAME', 'wpstarter'), '_').'_session'
     ),
 
     /*
