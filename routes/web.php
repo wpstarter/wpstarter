@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WelcomeController;
 use WpStarter\Support\Facades\Route;
 
 /*
@@ -13,5 +14,6 @@ use WpStarter\Support\Facades\Route;
 |
 */
 
-Route::get('welcome', \App\Http\Controllers\WelcomeController::class.'@index')->name('welcome');
+Route::get('welcome', [WelcomeController::class,'index'])->name('welcome');
+
 

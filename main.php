@@ -1,7 +1,7 @@
 <?php
 /***
  * Plugin name: WpStarter
- * Version:     1.0
+ * Version:     1.0.2
  * Description: WpStarter Plugin
  * Author:      As247
  * Author URI:  https://github.com/as247
@@ -10,7 +10,7 @@
 if(defined('__WS_FILE__')){
     return ;
 }
-define('WS_VERSION', '1.0');
+define('WS_VERSION', '1.0.2');
 define('WS_DIR', __DIR__);
 define('__WS_FILE__', __FILE__);
 
@@ -63,7 +63,7 @@ final class WordpressStarter
 	protected function runCli()
 	{
 		$kernel = $this->app->make(WpStarter\Contracts\Console\Kernel::class);
-        //add_action('sw_early_bootstrap',[$kernel,'earlyBootstrap'],0);
+        //add_action('ws_bootstrap',[$kernel,'earlyBootstrap'],0);
         add_action('plugins_loaded',[$kernel,'bootstrap'],1);
 		if(defined('WS_CLI') && WS_CLI) {
             add_action('init', function () use ($kernel) {
@@ -76,7 +76,7 @@ final class WordpressStarter
                 exit($status);
             }, 110);
         }
-        do_action('sw_early_bootstrap');
+        do_action('ws_bootstrap');
 	}
 
 
@@ -92,7 +92,7 @@ final class WordpressStarter
             );
             $this->processWebResponse($kernel,$request,$response);
 		}, 1);
-        do_action('sw_early_bootstrap');
+        do_action('ws_bootstrap');
 
 	}
 

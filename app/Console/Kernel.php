@@ -15,9 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('user:reset_icount')->at('00:05');
-        $schedule->command('user:recover_icount')->hourly();
-        $schedule->command('ti:rotate')->daily();
+
     }
 
     /**
