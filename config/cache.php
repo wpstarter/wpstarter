@@ -105,6 +105,6 @@ return [
     |
     */
 
-    'prefix' => ws_env('CACHE_PREFIX', Str::slug(ws_env('APP_NAME', 'laravel'), '_').'_cache'),
+    'prefix' => ws_env('CACHE_PREFIX', Str::slug(ws_env('APP_NAME', 'wpstarter'), '_').'_cache'),
 
 ];

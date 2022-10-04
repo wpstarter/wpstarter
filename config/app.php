@@ -137,7 +137,7 @@ return [
     'providers' => [
 
         /*
-         * Laravel Framework Service Providers...
+         * WpStarter Framework Service Providers...
          */
         WpStarter\Auth\AuthServiceProvider::class,
         WpStarter\Broadcasting\BroadcastServiceProvider::class,

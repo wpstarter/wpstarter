@@ -40,11 +40,8 @@ class Kernel extends \WpStarter\Foundation\Http\Kernel
         ],
 
         'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \WpStarter\Routing\Middleware\SubstituteBindings::class,
-            ScopeModelMiddleware::class,
-            LogRequestMiddleware::class,
         ],
     ];
     protected $routeMiddleware = [

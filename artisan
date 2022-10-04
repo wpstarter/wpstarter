@@ -1,8 +1,18 @@
 <?php
-require __DIR__ . '/bootstrap/autoload.php';
-
-$app = require_once __DIR__.'/bootstrap/app.php';
-
+define('WS_CLI',true);
+require __DIR__ . '/bootstrap/load-wp.php';
+$kernel=null;
+if(class_exists('WordpressStarter')){//Plugin activated
+    $kernel=WordpressStarter::make()->kernel();
+}else{//Plugin not activated
+    //require __DIR__ . '/bootstrap/autoload.php';
+    //$app = require_once __DIR__.'/bootstrap/app.php';
+    //$kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+}
+if(empty($kernel)){
+    echo 'The plugin is not activated'.PHP_EOL;
+    return ;
+}
 /*
 |--------------------------------------------------------------------------
 | Run The Artisan Application
@@ -13,8 +23,6 @@ $app = require_once __DIR__.'/bootstrap/app.php';
 | or another output device for the developers. Here goes nothing!
 |
 */
-
-$kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
 
 $status = $kernel->handle(
     $input = new Symfony\Component\Console\Input\ArgvInput,

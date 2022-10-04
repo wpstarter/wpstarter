@@ -38,7 +38,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may configure the log channels for your application. Out of
-    | the box, Laravel uses the Monolog PHP logging library. This gives
+    | the box, WpStarter uses the Monolog PHP logging library. This gives
     | you a variety of powerful log handlers / formatters to utilize.
     |
     | Available Drivers: "single", "daily", "slack", "syslog",
@@ -56,13 +56,13 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => ws_storage_path('logs/laravel.log'),
+            'path' => ws_storage_path('logs/wpstarter.log'),
             'level' => ws_env('LOG_LEVEL', 'debug'),
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => ws_storage_path('logs/laravel.log'),
+            'path' => ws_storage_path('logs/wpstarter.log'),
             'level' => ws_env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],
@@ -70,7 +70,7 @@ return [
         'slack' => [
             'driver' => 'slack',
             'url' => ws_env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'Laravel Log',
+            'username' => 'WpStarter Log',
             'emoji' => ':boom:',
             'level' => ws_env('LOG_LEVEL', 'critical'),
         ],
@@ -111,7 +111,7 @@ return [
         ],
 
         'emergency' => [
-            'path' => ws_storage_path('logs/laravel.log'),
+            'path' => ws_storage_path('logs/wpstarter.log'),
         ],
     ],
 
