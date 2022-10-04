@@ -10,7 +10,11 @@ if(class_exists('WordpressStarter')){//Plugin activated
     //$kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
 }
 if(empty($kernel)){
-    echo 'The plugin is not activated'.PHP_EOL;
+    if(defined('ABSPATH')){
+        echo "\033[33mThe plugin is not activated\033[0m".PHP_EOL;
+    }else{
+        echo "\033[33mWordpress not found, please install WpStarter inside WordPress directory \033[0m".PHP_EOL;
+    }
     return ;
 }
 /*

@@ -1,7 +1,7 @@
 <?php
 /***
  * Plugin name: WpStarter
- * Version:     1.0.3
+ * Version:     1.0.4
  * Description: WpStarter Plugin
  * Author:      As247
  * Author URI:  https://github.com/as247
@@ -10,11 +10,11 @@
 if(defined('__WS_FILE__')){
     return ;
 }
-define('WS_VERSION', '1.0.3');
+define('WS_VERSION', '1.0.4');
 define('WS_DIR', __DIR__);
 define('__WS_FILE__', __FILE__);
 
-require __DIR__ . '/bootstrap/autoload.php';
+
 use WpStarter\Http\Request;
 final class WordpressStarter
 {
@@ -32,21 +32,28 @@ final class WordpressStarter
 
 	function __construct()
 	{
-		$this->app = require_once __DIR__ . '/bootstrap/app.php';
+        $this->loadApp();
 	}
+    function loadApp(){
+        if(!$this->app) {
+            require __DIR__ . '/bootstrap/autoload.php';
+            return $this->app = require_once __DIR__ . '/bootstrap/app.php';
+        }
+        return $this->app;
+    }
     public function app(){
         return $this->app;
     }
     public function kernel(){
         return $this->kernel;
     }
-	function run()
-	{
+	function run(){
 		if ($this->isRunningInConsole()) {
 			$this->runCli();
 		} else {
 			$this->runWeb();
 		}
+        do_action('ws_bootstrap',$this);
 	}
 
 	protected function isRunningInConsole(){
@@ -66,7 +73,7 @@ final class WordpressStarter
 	{
         $this->kernel= $kernel = $this->app->make(WpStarter\Contracts\Console\Kernel::class);
         add_action('plugins_loaded',[$kernel,'bootstrap'],1);
-        do_action('ws_bootstrap');
+
 	}
 
 
@@ -82,7 +89,6 @@ final class WordpressStarter
             );
             $this->processWebResponse($kernel,$request,$response);
 		}, 1);
-        do_action('ws_bootstrap');
 
 	}
 
