@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => ws_env('MAIL_MAILER', 'smtp'),
+    'default' => ws_env('MAIL_MAILER', 'wp_mail'),
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return [
             'auth_mode' => null,
         ],
 
-        'wp'=>[
+        'wp_mail'=>[
             'transport'=>'wp',
         ],
 

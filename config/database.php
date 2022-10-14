@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => ws_env('DB_CONNECTION', 'wordpress'),
+    'default' => ws_env('DB_CONNECTION', 'wpdb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => ws_env('DB_FOREIGN_KEYS', true),
         ],
-        'wordpress' => [
+        'wpdb' => [
             'driver' => 'wp',
             'host' => defined('DB_HOST')?DB_HOST:'',
             'port' => 3306,
