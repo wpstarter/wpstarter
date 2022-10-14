@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => ws_env('APP_NAME', 'Wordpress Starter'),
+    'name' => ws_env('APP_NAME', 'WpStarter'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,19 @@ return [
     |
     */
 
-    'debug' => (bool) ws_env('APP_DEBUG', true),
+    'debug' => (bool) ws_env('APP_DEBUG', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | External Debug Mode
+    |--------------------------------------------------------------------------
+    |
+    | When external debug mode enabled, detailed error messages with
+    | stack traces will be shown on every error that occurs outside your
+    | application. If disabled, error will be ignored.
+    |
+    */
+    'debug_external' => (bool) ws_env('APP_DEBUG_EXTERNAL', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +64,7 @@ return [
     |
     */
 
-    'url' => ws_env('APP_URL', 'http://localhost'),
+    'url' => ws_env('APP_URL', site_url()),
 
     'asset_url' => ws_env('ASSET_URL', null),
 

@@ -6,11 +6,13 @@ use WpStarter\Wordpress\View\Component;
 
 class Welcome extends Component
 {
+    /**
+     * Call before render
+     * @return void
+     */
     function mount()
     {
-        $this->getResponse()->withTitle('abc');
         $this->response->withPostTitle('Post title');
-        //dd($this->response);
     }
 
     public function render()

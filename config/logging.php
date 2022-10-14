@@ -34,6 +34,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | External Log Channel
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the log channel that should be used to log errors
+    | outside application e.g. other plugins, theme or WordPress core
+    |
+    */
+    'external' => ws_env('LOG_EXTERNAL_CHANNEL', 'null'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Log Channels
     |--------------------------------------------------------------------------
     |
@@ -57,6 +68,11 @@ return [
         'single' => [
             'driver' => 'single',
             'path' => ws_storage_path('logs/wpstarter.log'),
+            'level' => ws_env('LOG_LEVEL', 'debug'),
+        ],
+        'single_wordpress' => [
+            'driver' => 'single',
+            'path' => ws_storage_path('logs/wordpress.log'),
             'level' => ws_env('LOG_LEVEL', 'debug'),
         ],
 
@@ -113,6 +129,8 @@ return [
         'emergency' => [
             'path' => ws_storage_path('logs/wpstarter.log'),
         ],
+
+
     ],
 
 ];

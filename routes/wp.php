@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\WelcomeController;
-use WpStarter\Support\Facades\Route;
+use WpStarter\Wordpress\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +12,6 @@ use WpStarter\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('welcome', [WelcomeController::class,'index'])->name('welcome');
-Route::get('welcome-page', [WelcomeController::class,'page'])->name('welcome.page');
-
+Route::get('welcome-shortcode',[\App\Http\Controllers\WelcomeController::class,'shortcode']);
 
 

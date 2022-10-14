@@ -11,7 +11,7 @@
 |
 */
 
-$app = new WpStarter\Foundation\Application(
+$app = new WpStarter\Wordpress\Application(
     dirname(__DIR__)
 );
 

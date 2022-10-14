@@ -7,6 +7,7 @@ use WpStarter\Foundation\Support\Providers\RouteServiceProvider as ServiceProvid
 use WpStarter\Http\Request;
 use WpStarter\Support\Facades\RateLimiter;
 use WpStarter\Support\Facades\Route;
+use WpStarter\Wordpress\Facades\Route as WpRoute;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::namespace($this->namespace)
                 ->middleware('web')
                 ->group(ws_base_path('routes/web.php'));
+
+            WpRoute::namespace($this->namespace)
+                ->middleware('web')
+                ->group(ws_base_path('routes/wp.php'));
         });
     }
 

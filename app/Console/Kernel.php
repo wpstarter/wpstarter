@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use WpStarter\Console\Scheduling\Schedule;
-use WpStarter\Foundation\Console\Kernel as ConsoleKernel;
+use WpStarter\Wordpress\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {

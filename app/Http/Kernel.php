@@ -2,9 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\LogRequestMiddleware;
 
-class Kernel extends \WpStarter\Foundation\Http\Kernel
+class Kernel extends \WpStarter\Wordpress\Kernel
 {
     /**
      * The application's global HTTP middleware stack.
@@ -32,7 +31,7 @@ class Kernel extends \WpStarter\Foundation\Http\Kernel
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \WpStarter\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \WpStarter\Session\Middleware\StartSession::class,
+            \WpStarter\Wordpress\Middleware\StartSession::class,
             //\WpStarter\Session\Middleware\AuthenticateSession::class,
             \WpStarter\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,

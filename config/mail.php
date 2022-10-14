@@ -45,6 +45,10 @@ return [
             'auth_mode' => null,
         ],
 
+        'wp'=>[
+            'transport'=>'wp',
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],

@@ -1,6 +1,12 @@
 <?php
 define('WS_CLI',true);
-require __DIR__ . '/bootstrap/load-wp.php';
+if(file_exists(__DIR__.'/wp-load.php')){
+   //Binary in wp root
+   require __DIR__.'/wp-load.php';
+}else{
+    //Binary in plugin
+    require __DIR__ . '/bootstrap/autoload-cli.php';
+}
 $kernel=null;
 if(class_exists('WordpressStarter')){//Plugin activated
     $kernel=WordpressStarter::make()->kernel();
