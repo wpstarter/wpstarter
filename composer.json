@@ -10,7 +10,7 @@
     "php": "^7.3|^8.0",
     "ext-openssl": "*",
     "ext-json": "*",
-    "wpstarter/framework": "^1.0"
+    "wpstarter/framework": "~1.1"
   },
   "require-dev": {
     "filp/whoops": "^2.14.5"

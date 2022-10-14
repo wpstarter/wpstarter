@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'url' => ws_env('APP_URL', site_url()),
+    'url' => ws_env('APP_URL', function_exists('site_url')?site_url():''),
 
     'asset_url' => ws_env('ASSET_URL', null),
 

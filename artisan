@@ -11,9 +11,11 @@ $kernel=null;
 if(class_exists('WordpressStarter')){//Plugin activated
     $kernel=WordpressStarter::make()->kernel();
 }else{//Plugin not activated
-    //require __DIR__ . '/bootstrap/autoload.php';
-    //$app = require_once __DIR__.'/bootstrap/app.php';
-    //$kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+    if(file_exists(__DIR__ . '/bootstrap/autoload.php')){
+        require __DIR__ . '/bootstrap/autoload.php';
+        $app = require_once __DIR__.'/bootstrap/app.php';
+        $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+    }
 }
 if(empty($kernel)){
     if(defined('ABSPATH')){
