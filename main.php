@@ -8,7 +8,7 @@
  *
  */
 
-if(!defined('__WS_FILE__')) {//Safe load
+if(!defined('__WS_FILE__') && defined('ABSPATH')) {//Safe load
     define('__WS_FILE__', __FILE__);
     define('WS_VERSION', '1.0.4');
     if (!defined('WS_DIR')) {

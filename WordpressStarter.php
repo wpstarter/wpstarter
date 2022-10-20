@@ -52,6 +52,7 @@ final class WordpressStarter
         do_action('ws_loaded',$this);
     }
 
+
     protected function isRunningInConsole(){
         if(defined('WS_CLI') && WS_CLI){
             return true;
@@ -73,6 +74,7 @@ final class WordpressStarter
 
     protected function runWeb()
     {
+        $this->checkMaintenance();
         $this->kernel = $kernel = $this->app->make(WpStarter\Contracts\Http\Kernel::class);
         $request = Request::capture();
         $this->app->instance('request', $request);
@@ -105,6 +107,19 @@ final class WordpressStarter
             }
         }else{//No route matched
             $kernel->registerWpHandler();
+        }
+    }
+
+    /**
+     * Check If The Application Is Under Maintenance
+     * If the application is in maintenance / demo mode via the "down" command
+     * we will load this file so that any pre-rendered content can be shown
+     * instead of starting the framework, which could cause an exception.
+     * @return void
+     */
+    protected function checkMaintenance(){
+        if (file_exists($maintenance = __DIR__.'/storage/framework/maintenance.php')) {
+            require $maintenance;
         }
     }
 }
