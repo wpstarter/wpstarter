@@ -32,7 +32,6 @@ class Kernel extends \WpStarter\Wordpress\Kernel
             \App\Http\Middleware\EncryptCookies::class,
             \WpStarter\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \WpStarter\Wordpress\Middleware\StartSession::class,
-            //\WpStarter\Session\Middleware\AuthenticateSession::class,
             \WpStarter\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \WpStarter\Routing\Middleware\SubstituteBindings::class,
