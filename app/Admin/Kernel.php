@@ -33,7 +33,6 @@ class Kernel extends AdminKernel
             \App\Http\Middleware\EncryptCookies::class,
             \WpStarter\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \WpStarter\Wordpress\Middleware\StartSession::class,
-            //\WpStarter\Session\Middleware\AuthenticateSession::class,
             \WpStarter\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
         ],
