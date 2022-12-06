@@ -14,7 +14,7 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     function boot(){
-        Route::middleware('admin')->group(__DIR__.'/admin.php');
+        Route::middleware('admin')->group(__DIR__.'/routes/admin.php');
         $this->loadViewsFrom(__DIR__.'/resources/views','admin');
     }
 }
