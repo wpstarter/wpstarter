@@ -92,7 +92,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => function_exists('determine_locale')?determine_locale():'en',
 
     /*
     |--------------------------------------------------------------------------
