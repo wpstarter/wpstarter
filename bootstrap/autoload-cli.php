@@ -10,7 +10,15 @@ if(!defined('ABSPATH')) {
         ];
         foreach ($locations as $location){
             if (file_exists($location . '/wp-load.php')) {
-                include $location . '/wp-load.php';
+                $haveConfig=false;
+                if ( file_exists( $location . '/wp-config.php' ) ) {
+                    $haveConfig=true;
+                } elseif ( @file_exists( dirname( $location ) . '/wp-config.php' ) && ! @file_exists( dirname( $location ) . '/wp-settings.php' ) ) {
+                    $haveConfig=true;
+                }
+                if($haveConfig) {
+                    include $location . '/wp-load.php';
+                }
                 break;
             }
         }
