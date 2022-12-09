@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'wp',
+        'guard' => 'web',
     ],
 
     /*
@@ -35,7 +35,7 @@ return [
     */
 
     'guards' => [
-        'wp' => [
+        'web' => [
             'driver' => 'wp',
             'provider' => 'users',
         ],
