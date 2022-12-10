@@ -15,6 +15,7 @@ use WpStarter\Support\Facades\Route;
 */
 Route::get('welcome', [WelcomeController::class,'index'])->name('welcome');
 Route::get('welcome-page', [WelcomeController::class,'page'])->name('welcome.page');
+//Route::get('welcome-page2',[WelcomeController::class,'shortcode']);
 
 
 

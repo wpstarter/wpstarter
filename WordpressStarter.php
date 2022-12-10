@@ -82,33 +82,10 @@ final class WordpressStarter
             $response = $kernel->handle(
                 $request
             );
-            $this->processWebResponse($kernel,$request,$response);
         }, 1);
 
     }
 
-    /**
-     * @param $kernel WpStarter\Wordpress\Kernel | WpStarter\Wordpress\Console\Kernel
-     * @param $request
-     * @param $response
-     * @return void
-     */
-    protected function processWebResponse($kernel,$request,$response){
-        if(!$request->isNotFoundHttpExceptionFromRoute()){
-            //Not a not found response from router
-            if($response instanceof \WpStarter\Wordpress\Http\Response){
-                //Got a WordPress response, process it
-                $handler=$this->app->make(WpStarter\Wordpress\Http\Response\Handler::class);
-                $handler->handle($kernel,$request,$response);
-            }else {//Normal response
-                $response->send();
-                $kernel->terminate($request, $response);
-                die;
-            }
-        }else{//No route matched
-            $kernel->registerWpHandler();
-        }
-    }
 
     /**
      * Check If The Application Is Under Maintenance
