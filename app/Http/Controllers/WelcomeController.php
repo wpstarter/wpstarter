@@ -28,7 +28,9 @@ class WelcomeController extends Controller
         return content_view('welcome.content');
     }
     function shortcode(){
-        return ws_view('welcome.shortcode');
+        return shortcode_view('welcome.shortcode',[],[])->add('section1',function(){
+            return 'welcome to section 1';
+        });
     }
     function post(Request $request){
         $this->validate($request,['your_name'=>'required']);
