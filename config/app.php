@@ -66,7 +66,8 @@ return [
 
     'url' => ws_env('APP_URL', function_exists('site_url')?site_url():''),
 
-    'asset_url' => ws_env('ASSET_URL', null),
+    'asset_url' => ws_env('ASSET_URL', function_exists('ws_plugin_url')?ws_plugin_url('public'):null),
+    'mix_url' => ws_env('MIX_URL', function_exists('ws_plugin_url')?ws_plugin_url('public'):null),
 
     /*
     |--------------------------------------------------------------------------
