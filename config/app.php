@@ -66,7 +66,26 @@ return [
 
     'url' => ws_env('APP_URL', function_exists('site_url')?site_url():''),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Asset Url
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used in ws_asset function to generate url to asset.
+    | Default it points to public directory
+    |
+    */
     'asset_url' => ws_env('ASSET_URL', function_exists('ws_plugin_url')?ws_plugin_url('public'):null),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mix Url
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used in ws_mix function to generate url to asset.
+    | Default it points to public directory
+    |
+    */
     'mix_url' => ws_env('MIX_URL', function_exists('ws_plugin_url')?ws_plugin_url('public'):null),
 
     /*
@@ -75,8 +94,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
+    | will be used by the PHP date and date-time functions. Please keep this
+    | as 'UTC' because it will conflict with WordPress if using another value
     |
     */
 
