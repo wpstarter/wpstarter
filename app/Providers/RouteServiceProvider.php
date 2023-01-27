@@ -21,10 +21,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
         $this->routes(function () {
-            if(function_exists('is_admin') && is_admin()){
-                //Frontend route not apply to wp-admin
-                return ;
-            }
             Route::namespace($this->namespace)
                 ->middleware('api')
                 ->group(ws_base_path('routes/api.php'));
