@@ -20,7 +20,6 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
-
         $this->routes(function () {
             Route::namespace($this->namespace)
                 ->middleware('api')
