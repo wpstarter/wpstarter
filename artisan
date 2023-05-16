@@ -1,21 +1,46 @@
 <?php
 define('WS_CLI',true);
-if(file_exists(__DIR__.'/wp-load.php')){
-   //Binary in wp root
-   require __DIR__.'/wp-load.php';
-}else{
+if(file_exists(__DIR__.'/bootstrap/autoload-cli.php')){
     //Binary in plugin
     require __DIR__ . '/bootstrap/autoload-cli.php';
-}
-$kernel=null;
-if(class_exists('WordpressStarter')){//Plugin activated
-    $kernel=WordpressStarter::make()->kernel();
-}else{//Plugin not activated
-    if(file_exists(__DIR__ . '/bootstrap/autoload.php')){
-        require __DIR__ . '/bootstrap/autoload.php';
-        $app = require_once __DIR__.'/bootstrap/app.php';
-        $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+}elseif(file_exists(__DIR__.'/wp-load.php')){
+    //Binary in wp root
+    $wps_finder=function(){
+        $handle = @opendir(__DIR__);
+        if (!$handle) {
+            return null;
+        }
+        while (false !== ($entry = @readdir($handle))) {
+            if ($entry != "." && $entry != ".." && file_exists(__DIR__ . "/" . $entry. "/WordpressStarter.php")) {
+                @closedir($handle);
+                return __DIR__."/".$entry;
+            }
+        }
+
+        @closedir($handle);
+    };
+    $wps_base_path=$wps_finder();
+    if($wps_base_path){
+        define('WS_DIR',$wps_base_path);
     }
+    unset($wps_finder);
+    unset($wps_base_path);
+
+    if(defined('WS_DIR')){
+        require WS_DIR . '/bootstrap/autoload-cli.php';
+    }elseif(file_exists(__DIR__.'/wp-config.php') || file_exists( dirname( __DIR__ ) . '/wp-config.php' ) && ! file_exists( dirname( __DIR__ ) . '/wp-settings.php' )){
+        //Use wp-load if have valid config
+        require __DIR__.'/wp-load.php';
+    }
+}
+
+$kernel=null;
+if(defined('WS_DIR') && file_exists(WS_DIR . '/bootstrap/autoload.php')){
+    require WS_DIR . '/bootstrap/autoload.php';
+    $app = require_once WS_DIR.'/bootstrap/app.php';
+    $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+}elseif(class_exists('WordpressStarter')){//Plugin activated
+    $kernel=WordpressStarter::make()->kernel();
 }
 if(empty($kernel)){
     if(defined('ABSPATH')){
