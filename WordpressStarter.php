@@ -26,7 +26,7 @@ final class WordpressStarter
     }
     function loadApp(){
         if(!$this->app) {
-            require __DIR__ . '/bootstrap/autoload.php';
+            require_once __DIR__ . '/bootstrap/autoload.php';
             return $this->app = require_once __DIR__ . '/bootstrap/app.php';
         }
         return $this->app;

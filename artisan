@@ -1,64 +1,93 @@
 <?php
+/**
+ * We are in CLI
+ */
 define('WS_CLI',true);
+/**
+ * Normally when artisan is in wp root directory it will not run if plugin is not active
+ * Force cli mode will always load cli even plugin is not active
+ */
+define('WS_CLI_FORCE',false);
+/**
+ * -----------------
+ * Bootstrap
+ * ----------------
+ * We start to check where binary located, supported locations
+ * for artisan binary are plugin directory and WordPress directory.
+ * When binary is in plugin directory artisan will always be handled.
+ * When binary is in root directory we will check if `WS_CLI_FORCE` flag
+ * is enabled or not, if force flag is not enabled command only run
+ * when plugin is enabled.
+ */
 if(file_exists(__DIR__.'/WordpressStarter.php') && file_exists(__DIR__.'/bootstrap/autoload-cli.php')){
     //Binary in plugin
-    require __DIR__ . '/bootstrap/autoload-cli.php';
+    define('WS_DIR',__DIR__);
 }elseif(file_exists(__DIR__.'/wp-load.php')){
     //Binary in wp root
-    if(file_exists(__DIR__.'/wp-config.php') ||
-        (file_exists( dirname( __DIR__ ) . '/wp-config.php' ) && ! file_exists( dirname( __DIR__ ) . '/wp-settings.php' ))
-    ){
-        //Use wp-load if have valid config
-        include __DIR__.'/wp-load.php';
-    }else{
-        $wps_finder=function(){
-            if(defined('WS_DIR')){
-                return WS_DIR;
-            }
-            $directories=[__DIR__,__DIR__.'/wp-content/plugins'];
-            $found=null;
-            foreach ($directories as $directory) {
-                $handle = @opendir($directory);
-                if (!$handle) {
-                    return null;
-                }
-                while (false !== ($entry = @readdir($handle))) {
-                    if ($entry != "." && $entry != ".." && file_exists($directory . "/" . $entry . "/WordpressStarter.php")) {
-                        @closedir($handle);
-                        $found = $directory . "/" . $entry;
-                        break 2;
-                    }
-                }
-                @closedir($handle);
-            }
-            return $found;
-        };
-        $wps_base_path=$wps_finder();
-        if($wps_base_path){
-            define('WS_DIR',$wps_base_path);
+    $wpConfigFound=file_exists(__DIR__.'/wp-config.php') ||
+        (file_exists( dirname( __DIR__ ) . '/wp-config.php' ) && ! file_exists( dirname( __DIR__ ) . '/wp-settings.php' ));
+    $wpsFinder=function(){
+        if(defined('WS_DIR')){
+            return WS_DIR;
         }
-        unset($wps_finder);
-        unset($wps_base_path);
+        $directories=[__DIR__,__DIR__.'/wp-content/plugins'];
+        $found=null;
+        foreach ($directories as $directory) {
+            $handle = @opendir($directory);
+            if (!$handle) {
+                return null;
+            }
+            while (false !== ($entry = @readdir($handle))) {
+                if ($entry != "." && $entry != ".." && file_exists($directory . "/" . $entry . "/WordpressStarter.php")) {
+                    @closedir($handle);
+                    $found = $directory . "/" . $entry;
+                    break 2;
+                }
+            }
+            @closedir($handle);
+        }
+        return $found;
+    };
+    if(WS_CLI_FORCE){
+        if($wpsBasePath=$wpsFinder()){
+            define('WS_DIR',$wpsBasePath);
+        }elseif($wpConfigFound){
+            include __DIR__.'/wp-load.php';
+        }
 
+    }else{
+        if($wpConfigFound){
+            include __DIR__.'/wp-load.php';
+        }elseif($wpsBasePath=$wpsFinder()){
+            define('WS_DIR',$wpsBasePath);
+        }
     }
+    unset($wpsFinder);
+    unset($wpsBasePath);
+    unset($wpConfigFound);
 
 }
-
+/**
+ * Get the kernel
+ * When plugin activated kernel instance will be obtained via WordpressStarter class
+ * When plugin is not activated it will try to create new kernel from app
+ *
+ */
 $kernel=null;
 if(class_exists('WordpressStarter')){//Plugin activated
     $kernel=WordpressStarter::make()->kernel();
-}elseif(defined('WS_DIR') && file_exists(WS_DIR . '/bootstrap/autoload.php')){
-    require WS_DIR . '/bootstrap/autoload.php';
+}elseif(defined('WS_DIR') && file_exists(WS_DIR . '/bootstrap/autoload-cli.php')){
+    require WS_DIR . '/bootstrap/autoload-cli.php';
     $app = require_once WS_DIR.'/bootstrap/app.php';
     $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
 }
 if(empty($kernel)){
-    if(defined('ABSPATH')){
+    if(defined('ABSPATH')){//Found wp-load.php
         echo "\033[33mThe plugin is not activated\033[0m".PHP_EOL;
-    }else{
+    }else{//No wp-load.php found and also no WpStarter found
         echo "\033[33mWordpress not found, please install WpStarter inside WordPress directory \033[0m".PHP_EOL;
     }
-    return ;
+    exit(255) ;
 }
 /*
 |--------------------------------------------------------------------------
