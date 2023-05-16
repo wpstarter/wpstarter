@@ -1,37 +1,47 @@
 <?php
 define('WS_CLI',true);
-if(file_exists(__DIR__.'/bootstrap/autoload-cli.php')){
+if(file_exists(__DIR__.'/WordpressStarter.php') && file_exists(__DIR__.'/bootstrap/autoload-cli.php')){
     //Binary in plugin
     require __DIR__ . '/bootstrap/autoload-cli.php';
 }elseif(file_exists(__DIR__.'/wp-load.php')){
     //Binary in wp root
-    $wps_finder=function(){
-        $handle = @opendir(__DIR__);
-        if (!$handle) {
-            return null;
-        }
-        while (false !== ($entry = @readdir($handle))) {
-            if ($entry != "." && $entry != ".." && file_exists(__DIR__ . "/" . $entry. "/WordpressStarter.php")) {
-                @closedir($handle);
-                return __DIR__."/".$entry;
-            }
-        }
-
-        @closedir($handle);
-    };
-    $wps_base_path=$wps_finder();
-    if($wps_base_path){
-        define('WS_DIR',$wps_base_path);
-    }
-    unset($wps_finder);
-    unset($wps_base_path);
-
-    if(defined('WS_DIR')){
-        require WS_DIR . '/bootstrap/autoload-cli.php';
-    }elseif(file_exists(__DIR__.'/wp-config.php') || file_exists( dirname( __DIR__ ) . '/wp-config.php' ) && ! file_exists( dirname( __DIR__ ) . '/wp-settings.php' )){
+    if(file_exists(__DIR__.'/wp-config.php') ||
+        (file_exists( dirname( __DIR__ ) . '/wp-config.php' ) && ! file_exists( dirname( __DIR__ ) . '/wp-settings.php' ))
+    ){
         //Use wp-load if have valid config
-        require __DIR__.'/wp-load.php';
+        include __DIR__.'/wp-load.php';
+    }else{
+        $wps_finder=function(){
+            if(defined('WS_DIR')){
+                return WS_DIR;
+            }
+            $directories=[__DIR__,__DIR__.'/wp-content/plugins'];
+            $found=null;
+            foreach ($directories as $directory) {
+                $handle = @opendir($directory);
+                if (!$handle) {
+                    return null;
+                }
+                while (false !== ($entry = @readdir($handle))) {
+                    if ($entry != "." && $entry != ".." && file_exists($directory . "/" . $entry . "/WordpressStarter.php")) {
+                        @closedir($handle);
+                        $found = $directory . "/" . $entry;
+                        break 2;
+                    }
+                }
+                @closedir($handle);
+            }
+            return $found;
+        };
+        $wps_base_path=$wps_finder();
+        if($wps_base_path){
+            define('WS_DIR',$wps_base_path);
+        }
+        unset($wps_finder);
+        unset($wps_base_path);
+
     }
+
 }
 
 $kernel=null;
