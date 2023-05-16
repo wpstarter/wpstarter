@@ -10,7 +10,7 @@
 
 if(!defined('__WS_FILE__') && defined('ABSPATH')) {//Safe load
     define('__WS_FILE__', __FILE__);
-    define('WS_VERSION', '1.3');
+    define('WS_VERSION', '1.4');
     if (!defined('WS_DIR')) {
         define('WS_DIR', __DIR__);
     }
