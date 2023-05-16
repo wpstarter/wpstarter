@@ -35,12 +35,12 @@ if(file_exists(__DIR__.'/bootstrap/autoload-cli.php')){
 }
 
 $kernel=null;
-if(defined('WS_DIR') && file_exists(WS_DIR . '/bootstrap/autoload.php')){
+if(class_exists('WordpressStarter')){//Plugin activated
+    $kernel=WordpressStarter::make()->kernel();
+}elseif(defined('WS_DIR') && file_exists(WS_DIR . '/bootstrap/autoload.php')){
     require WS_DIR . '/bootstrap/autoload.php';
     $app = require_once WS_DIR.'/bootstrap/app.php';
     $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
-}elseif(class_exists('WordpressStarter')){//Plugin activated
-    $kernel=WordpressStarter::make()->kernel();
 }
 if(empty($kernel)){
     if(defined('ABSPATH')){
