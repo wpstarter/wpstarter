@@ -1,4 +1,7 @@
-<FilesMatch "^\.env">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+Order deny,allow
+Deny from all
+
+# Allow access to the public directory
+<Directory "public">
+    Allow from all
+</Directory>

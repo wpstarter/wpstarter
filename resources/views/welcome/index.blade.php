@@ -5,7 +5,7 @@
 
     <a href="{{ws_route('welcome.page')}}">Display in wordpress page</a>
     <br>
-    <a href="{{ws_url('welcome-page2')}}">Demo shortcode page</a>
+    <a href="{{ws_url('welcome-shortcode-page')}}">Demo shortcode page</a>
 
 </div>
 

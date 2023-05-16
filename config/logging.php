@@ -41,7 +41,7 @@ return [
     | outside application e.g. other plugins, theme or WordPress core
     |
     */
-    'external' => ws_env('LOG_EXTERNAL_CHANNEL', 'null'),
+    'external' => ws_env('LOG_EXTERNAL_CHANNEL', 'stack'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,13 +64,18 @@ return [
             'channels' => ['single'],
             'ignore_exceptions' => false,
         ],
+        'stack_wp' => [
+            'driver' => 'stack',
+            'channels' => ['single_wp'],
+            'ignore_exceptions' => false,
+        ],
 
         'single' => [
             'driver' => 'single',
             'path' => ws_storage_path('logs/wpstarter.log'),
             'level' => ws_env('LOG_LEVEL', 'debug'),
         ],
-        'single_wordpress' => [
+        'single_wp' => [
             'driver' => 'single',
             'path' => ws_storage_path('logs/wordpress.log'),
             'level' => ws_env('LOG_LEVEL', 'debug'),
@@ -79,6 +84,13 @@ return [
         'daily' => [
             'driver' => 'daily',
             'path' => ws_storage_path('logs/wpstarter.log'),
+            'level' => ws_env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
+
+        'daily_wp' => [
+            'driver' => 'daily',
+            'path' => ws_storage_path('logs/wordpress.log'),
             'level' => ws_env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],
