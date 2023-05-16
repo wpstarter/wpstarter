@@ -26,3 +26,4 @@ if(!defined('ABSPATH')) {
     $wploader000001();
     unset($wploader000001);
 }
+require_once WS_DIR . '/bootstrap/autoload.php';
