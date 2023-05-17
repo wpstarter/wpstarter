@@ -38,7 +38,6 @@ if(!defined('WS_DIR')) {
     }
     unset($wpsFinder);
     unset($wpsBasePath);
-    unset($wpConfigFound);
 }
 /**
  * Autoload
