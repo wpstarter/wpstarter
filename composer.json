@@ -14,7 +14,8 @@
     "ext-pdo": "*"
   },
   "require-dev": {
-    "filp/whoops": "^2.14.5"
+    "filp/whoops": "^2.14.5",
+    "phpunit/phpunit": "^9.5.10"
   },
   "autoload": {
     "psr-4": {
@@ -23,6 +24,11 @@
     "files": [
 
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   },
   "scripts": {
     "post-autoload-dump": [

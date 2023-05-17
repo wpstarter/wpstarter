@@ -1,7 +1,4 @@
 <?php
-if(!defined('WS_DIR')){
-    define('WS_DIR',dirname(__DIR__));
-}
 if(!defined('ABSPATH')) {
     $wploader000001 = function () {
         $wps_parent=dirname(WS_DIR);
@@ -26,4 +23,3 @@ if(!defined('ABSPATH')) {
     $wploader000001();
     unset($wploader000001);
 }
-require_once WS_DIR . '/bootstrap/autoload.php';
