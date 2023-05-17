@@ -3,35 +3,20 @@
  * We are in CLI
  */
 define('WS_CLI',true);
-/**
- * Normally when artisan is in wp root directory it will not run if plugin is not active
- * Force cli mode will always load cli even plugin is not active
- */
-define('WS_CLI_FORCE',false);
+
 /**
  * -----------------
- * Bootstrap
+ * Find basedir WS_DIR
  * ----------------
- * We start to check where binary located, supported locations
- * for artisan binary are plugin directory and WordPress directory.
- * When binary is in plugin directory artisan will always be handled.
- * When binary is in root directory we will check if `WS_CLI_FORCE` flag
- * is enabled or not, if force flag is not enabled command only run
- * when plugin is enabled.
+ * If no WS_DIR defined we try to locate it
  */
-if(file_exists(__DIR__.'/WordpressStarter.php') && file_exists(__DIR__.'/bootstrap/autoload-cli.php')){
-    //Binary in plugin
-    define('WS_DIR',__DIR__);
-}elseif(file_exists(__DIR__.'/wp-load.php')){
-    //Binary in wp root
-    $wpConfigFound=file_exists(__DIR__.'/wp-config.php') ||
-        (file_exists( dirname( __DIR__ ) . '/wp-config.php' ) && ! file_exists( dirname( __DIR__ ) . '/wp-settings.php' ));
-    $wpsFinder=function(){
-        if(defined('WS_DIR')){
-            return WS_DIR;
+if(!defined('WS_DIR')) {
+    $wpsFinder = function () {
+        if (file_exists(__DIR__ . '/WordpressStarter.php')) {
+            return __DIR__;
         }
-        $directories=[__DIR__,__DIR__.'/wp-content/plugins'];
-        $found=null;
+        $directories = [__DIR__, __DIR__ . '/wp-content/plugins'];
+        $found = null;
         foreach ($directories as $directory) {
             $handle = @opendir($directory);
             if (!$handle) {
@@ -48,41 +33,52 @@ if(file_exists(__DIR__.'/WordpressStarter.php') && file_exists(__DIR__.'/bootstr
         }
         return $found;
     };
-    if(WS_CLI_FORCE){
-        if($wpsBasePath=$wpsFinder()){
-            define('WS_DIR',$wpsBasePath);
-        }elseif($wpConfigFound){
-            include __DIR__.'/wp-load.php';
-        }
-
-    }else{
-        if($wpConfigFound){
-            include __DIR__.'/wp-load.php';
-        }elseif($wpsBasePath=$wpsFinder()){
-            define('WS_DIR',$wpsBasePath);
-        }
+    if ($wpsBasePath = $wpsFinder()) {
+        define('WS_DIR', $wpsBasePath);
     }
     unset($wpsFinder);
     unset($wpsBasePath);
     unset($wpConfigFound);
-
 }
 /**
+ * Autoload
+ */
+if(defined('WS_DIR')) {
+    require WS_DIR . '/bootstrap/autoload.php';
+}
+/**
+ * ------------------
  * Get the kernel
+ * ------------------
  * When plugin activated kernel instance will be obtained via WordpressStarter class
  * When plugin is not activated it will try to create new kernel from app
  *
  */
 $kernel=null;
-if(defined('WS_DIR') && file_exists(WS_DIR . '/bootstrap/autoload-cli.php')) {
-    require WS_DIR . '/bootstrap/autoload-cli.php';
-}
 if(class_exists('WordpressStarter')){//Plugin activated
     $kernel=WordpressStarter::make()->kernel();
-}elseif(defined('WS_DIR') && file_exists(WS_DIR.'/bootstrap/app.php')){
-    $app = require_once WS_DIR.'/bootstrap/app.php';
-    $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+}else {//Plugin not activated
+    if(!defined('WS_CLI_ALWAYS_ENABLED')){
+        /**
+         * Normally when artisan is in wp root directory it will not run if plugin is not activated
+         * This flag can be used to always enable artisan even plugin not activated
+         */
+        define('WS_CLI_ALWAYS_ENABLED',false);
+    }
+    if (defined('WS_DIR')) {
+        /**
+         * Create kernel when: no wp loaded or force mode or binary not in root
+         */
+        if(!defined('ABSPATH') || WS_CLI_ALWAYS_ENABLED || ABSPATH !==__DIR__.'/' ) {
+            //Try to make kernel
+            $app = require_once WS_DIR . '/bootstrap/app.php';
+            $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+        }
+    }
 }
+/**
+ * Cannot obtain kernel exit with code 255
+ */
 if(empty($kernel)){
     if(defined('ABSPATH')){//Found wp-load.php
         echo "\033[33mThe plugin is not activated\033[0m".PHP_EOL;
