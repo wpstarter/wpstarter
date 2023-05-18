@@ -1,4 +1,7 @@
 <?php
+if(!defined('WS_DIR')){
+    define('WS_DIR',dirname(__DIR__));
+}
 //Load WordPress first
 if(!defined('ABSPATH')){//Standalone autoload
     require __DIR__.'/load-wp.php';
