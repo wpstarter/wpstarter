@@ -65,7 +65,7 @@ return [
             'unix_socket' => ws_env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
+            'prefix' => $GLOBALS['table_prefix']??'wp_',
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
