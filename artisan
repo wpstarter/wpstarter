@@ -40,51 +40,30 @@ if(!defined('WS_DIR')) {
     unset($wpsBasePath);
 }
 /**
- * Autoload
+ * Autoload and obtains kernel
  */
+
 if(defined('WS_DIR')) {
     require WS_DIR . '/bootstrap/autoload.php';
-}
-/**
- * ------------------
- * Get the kernel
- * ------------------
- * When plugin activated kernel instance will be obtained via WordpressStarter class
- * When plugin is not activated it will try to create new kernel from app
- *
- */
-$kernel=null;
-if(class_exists('WordpressStarter')){//Plugin activated
     $kernel=WordpressStarter::make()->kernel();
-}else {//Plugin not activated
-    if(!defined('WS_CLI_ALWAYS_ENABLED')){
-        /**
-         * Normally when artisan is in wp root directory it will not run if plugin is not activated
-         * This flag can be used to always enable artisan even plugin not activated
-         */
-        define('WS_CLI_ALWAYS_ENABLED',false);
-    }
-    if (defined('WS_DIR')) {
-        /**
-         * Create kernel when: no wp loaded or force mode or binary not in root
-         */
-        if(!defined('ABSPATH') || WS_CLI_ALWAYS_ENABLED || ABSPATH !==__DIR__.'/' ) {
-            //Try to make kernel
-            $app = require_once WS_DIR . '/bootstrap/app.php';
-            $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
-        }
-    }
 }
 /**
  * Cannot obtain kernel exit with code 255
  */
 if(empty($kernel)){
-    if(defined('ABSPATH')){//Found wp-load.php
-        echo "\033[33mThe plugin is not activated\033[0m".PHP_EOL;
-    }else{//No wp-load.php found and also no WpStarter found
-        echo "\033[33mWordpress not found, please install WpStarter inside WordPress directory \033[0m".PHP_EOL;
-    }
+    echo "\033[33mWordpress not found, please install WpStarter inside WordPress directory \033[0m".PHP_EOL;
     exit(255) ;
+}
+/**
+ * Check if plugin not activated and we use binary in root to run
+ */
+
+if( (!defined('WS_CLI_ALWAYS_ENABLED') || !WS_CLI_ALWAYS_ENABLED)//Not always enabled
+    && (defined('ABSPATH') && ABSPATH ===__DIR__.'/') // and binary in root
+    && !defined('__WS_FILE__') // and plugin not activated
+){
+    echo "\033[33mThe plugin is not activated\033[0m".PHP_EOL;
+    exit(254) ;
 }
 /*
 |--------------------------------------------------------------------------
