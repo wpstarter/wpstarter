@@ -75,7 +75,7 @@ return [
     | Default it points to public directory
     |
     */
-    'asset_url' => ws_env('ASSET_URL', function_exists('ws_plugin_url')?ws_plugin_url('public'):null),
+    'asset_url' => ws_env('ASSET_URL', ws_plugin_url('public')),
 
     /*
     |--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ return [
     | Default it points to public directory
     |
     */
-    'mix_url' => ws_env('MIX_URL', function_exists('ws_plugin_url')?ws_plugin_url('public'):null),
+    'mix_url' => ws_env('MIX_URL', ws_plugin_url('public')),
 
     /*
     |--------------------------------------------------------------------------
@@ -145,7 +145,7 @@ return [
     | Encryption Key
     |--------------------------------------------------------------------------
     |
-    | This key is used by the Illuminate encrypter service and should be set
+    | This key is used by the WpStarter encrypter service and should be set
     | to a random, 32 character string, otherwise these encrypted strings
     | will not be safe. Please do this before deploying an application!
     |

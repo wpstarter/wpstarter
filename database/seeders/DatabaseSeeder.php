@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use WpStarter\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
