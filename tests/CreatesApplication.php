@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use WpStarter\Contracts\Console\Kernel;
+
 trait CreatesApplication
 {
     /**
@@ -11,6 +13,8 @@ trait CreatesApplication
      */
     public function createApplication()
     {
-        return \WordpressStarter::make()->app();
+        $app=\WordpressStarter::make()->app();
+        $app->make(Kernel::class)->bootstrap();
+        return $app;
     }
 }
