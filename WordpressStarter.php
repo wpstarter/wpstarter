@@ -39,7 +39,7 @@ final class WordpressStarter
             return;
         }
         $this->booted=true;
-        $this->app = require_once WS_DIR . '/bootstrap/app.php';
+        $this->app = require WS_DIR . '/bootstrap/app.php';
         if ($this->isRunningInConsole()) {
             $this->kernel = $this->app->make(WpStarter\Contracts\Console\Kernel::class);
         }else{
@@ -58,6 +58,8 @@ final class WordpressStarter
         do_action('ws_loaded',$this);
     }
     public function app(){
+        //Instance may be lost when create new application
+        $this->app::setInstance($this->app);
         return $this->app;
     }
     public function kernel(){
