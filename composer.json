@@ -1,7 +1,7 @@
 {
   "name": "wpstarter/wpstarter",
   "description": "The WpStarter Framework - Laravel Framework for WordPress",
-  "keywords": ["wordpress", "starter"],
+  "keywords": ["wordpress", "stater", "laravel","wp","framework"],
   "license": "none",
   "minimum-stability": "dev",
   "prefer-stable": true,
