@@ -15,6 +15,7 @@ class WelcomeController extends Controller
                     'post_name' => 'welcome-shortcode-page',
                     'post_title' => 'Wordpress Starter Shortcode sample',
                     'post_content' => '[welcome-shortcode]',
+                    'post_status'=>'publish'
                 ]);
             }
         }
@@ -25,7 +26,12 @@ class WelcomeController extends Controller
         $path=trim($path,'/');
         $page=get_page_by_path($path);
         if(!$page){
-            wp_insert_post(['post_type'=>'page','post_name'=>$path,'post_title'=>'Wordpress Starter Page Inside wordpress']);
+            wp_insert_post([
+                'post_type'=>'page',
+                'post_name'=>$path,
+                'post_title'=>'Wordpress Starter Page Inside wordpress',
+                'post_status'=>'publish'
+            ]);
         }
         return content_view('welcome.content');
     }
