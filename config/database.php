@@ -2,6 +2,9 @@
 
 use WpStarter\Support\Str;
 
+/** wpdb */
+global $wpdb;
+
 return [
 
     /*
@@ -49,9 +52,9 @@ return [
             'database' => defined('DB_NAME')?DB_NAME:'',
             'username' => defined('DB_USER')?DB_USER:'',
             'password' => defined('DB_PASSWORD')?DB_PASSWORD:'',
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => 'wp_',
+            'charset' => $wpdb ? $wpdb->charset : 'utf8mb4',
+            'collation' => $wpdb ? $wpdb->collate : 'utf8mb4_unicode_ci',
+            'prefix' => $wpdb ? $wpdb->prefix : 'wp_',
             'prefix_indexes' => true,
         ],
         'mysql' => [
