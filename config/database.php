@@ -2,7 +2,7 @@
 
 use WpStarter\Support\Str;
 
-/** wpdb */
+/** @var wpdb */
 global $wpdb;
 
 return [
@@ -66,9 +66,9 @@ return [
             'username' => defined('DB_USER')?DB_USER:ws_env('DB_USERNAME', 'forge'),
             'password' => defined('DB_PASSWORD')?DB_PASSWORD:ws_env('DB_PASSWORD', ''),
             'unix_socket' => ws_env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => $GLOBALS['table_prefix']??'wp_',
+            'charset' => $wpdb ? $wpdb->charset : 'utf8mb4',
+            'collation' => $wpdb ? $wpdb->collate : 'utf8mb4_unicode_ci',
+            'prefix' => $wpdb ? $wpdb->prefix : 'wp_',
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,

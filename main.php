@@ -9,8 +9,15 @@
  */
 
 if(!defined('__WS_FILE__') && defined('ABSPATH')) {//Safe load
+    /**
+     * Your application version, free to change
+     */
+    define('WS_VERSION', '1.5');
+
+    /***
+     * Do not change anything after this line
+     */
     define('__WS_FILE__', __FILE__);
-    define('WS_VERSION', '1.4');
     if (!defined('WS_DIR')) {
         define('WS_DIR', __DIR__);
     }

@@ -1,5 +1,6 @@
 <?php
 use WpStarter\Http\Request;
+use WpStarter\Wordpress\PluginsLoader\Loader as PluginsLoader;
 
 final class WordpressStarter
 {
@@ -15,6 +16,10 @@ final class WordpressStarter
     protected $booted;
     static protected $instance;
 
+    /**
+     * Create instance of WpStarter
+     * @return self
+     */
     public static function make()
     {
         if (!self::$instance) {
@@ -45,26 +50,43 @@ final class WordpressStarter
         }else{
             $this->kernel = $this->app->make(WpStarter\Contracts\Http\Kernel::class);
         }
-        if(!function_exists('add_action')){
-            //No WordPress env, skip register bootstrap
-            return ;
+        if(class_exists(PluginsLoader::class)){
+            $this->checkForPluginsLoader();
+            PluginsLoader::getInstance()->run();
         }
-        if(!did_action('mu_plugin_loaded')) {
-            add_action('mu_plugin_loaded', [$this->kernel, 'earlyBootstrap'], 1);
-        }else{
-            add_action('ws_loaded',[$this->kernel,'earlyBootstrap'],1);
-        }
+        add_action('ws_loaded',[$this->kernel,'earlyBootstrap'],1);
         add_action('plugins_loaded',[$this->kernel,'bootstrap'],1);
-        do_action('ws_loaded',$this);
+        if(!did_action('mu_plugin_loaded')) {
+            add_action('mu_plugin_loaded', function (){
+                do_action('ws_loaded',$this);
+            }, 1);
+        }else{
+            do_action('ws_loaded',$this);
+        }
     }
+
+    /**
+     * Get the application
+     * @return \WpStarter\Foundation\Application
+     */
     public function app(){
         //Instance may be lost when create new application
         $this->app::setInstance($this->app);
         return $this->app;
     }
+
+    /**
+     * Get the kernel
+     * @return \WpStarter\Wordpress\Console\Kernel|\WpStarter\Wordpress\Kernel
+     */
     public function kernel(){
         return $this->kernel;
     }
+
+    /**
+     * Run WpStarter Application
+     * @return void
+     */
     function run(){
         $this->boot();
         if ($this->isRunningInConsole()) {
@@ -73,6 +95,12 @@ final class WordpressStarter
             $this->runWeb();
         }
 
+    }
+
+    function checkForPluginsLoader(){
+        if (file_exists($loader = WS_DIR.'/app/PluginsLoader.php')) {
+            require $loader;
+        }
     }
 
     protected function runCli()
