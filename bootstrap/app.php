@@ -1,4 +1,9 @@
 <?php
+/*
+ * Fill something missing things required by WpStarter
+ * like: WP_User Class
+ */
+require_once __DIR__ . '/fill/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
