@@ -115,8 +115,8 @@ final class WordpressStarter
         $request = Request::capture();
         $this->app->instance('request', $request);
         add_action('init', function ()use($request) {
-            $response = $this->kernel->handle(
-                $request
+             $this->kernel->handle(
+                $request, true
             );
         }, 1);
 

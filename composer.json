@@ -15,7 +15,8 @@
   },
   "require-dev": {
     "filp/whoops": "^2.14.5",
-    "phpunit/phpunit": "^9.5.10"
+    "phpunit/phpunit": "^9.5.10",
+    "wpstarter/wp-testbench": "^1.0"
   },
   "autoload": {
     "psr-4": {

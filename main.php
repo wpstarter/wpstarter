@@ -12,7 +12,7 @@ if(!defined('__WS_FILE__') && defined('ABSPATH')) {//Safe load
     /**
      * Your application version, free to change
      */
-    define('WS_VERSION', '1.5');
+    define('WS_VERSION', '1.6.x');
 
     /***
      * Do not change anything after this line
