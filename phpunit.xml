@@ -18,7 +18,8 @@
         </include>
     </coverage>
     <php>
-        <env name="WP_TESTBENCH_PLUGIN" value="main.php"/>
+        <server name="WP_TESTBENCH_PLUGIN" value="main.php"/>
+        <!-- <server name="WP_TESTBENCH_CONFIG" value="custom-config.php"/> -->
         <server name="APP_ENV" value="testing"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="array"/>
