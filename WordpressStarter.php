@@ -1,6 +1,6 @@
 <?php
 use WpStarter\Http\Request;
-use WpStarter\Wordpress\PluginsLoader\Loader as PluginsLoader;
+use WpStarter\Wordpress\Plugins\Loader as PluginsLoader;
 
 final class WordpressStarter
 {
