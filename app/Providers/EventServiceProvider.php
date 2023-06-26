@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use WpStarter\Auth\Events\Registered;
+use WpStarter\Auth\Listeners\SendEmailVerificationNotification;
 use WpStarter\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use WpStarter\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -12,10 +15,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Event::class => [
-            Listener::class,
+        Registered::class => [
+            SendEmailVerificationNotification::class,
         ],
     ];
+
 
     /**
      * Register any events for your application.

@@ -1,6 +1,6 @@
 {
   "name": "wpstarter/wpstarter",
-  "description": "The WpStarter Framework - Laravel Framework for WordPress",
+  "description": "WpStarter - Supercharge your WordPress development with the power of Laravel",
   "keywords": ["wordpress", "stater", "laravel","wp","framework"],
   "license": "none",
   "minimum-stability": "dev",
@@ -10,7 +10,7 @@
     "php": "^7.3|^8.0",
     "ext-openssl": "*",
     "ext-json": "*",
-    "wpstarter/framework": "^1.6.0",
+    "wpstarter/framework": "^1.6.1",
     "ext-pdo": "*"
   },
   "require-dev": {
