@@ -13,5 +13,6 @@ use WpStarter\Wordpress\Facades\Route;
 |
 */
 Route::get('welcome-shortcode',[\App\Http\Controllers\WelcomeController::class,'shortcode']);
+Route::post('welcome-shortcode',[\App\Http\Controllers\WelcomeController::class,'post']);
 
 
