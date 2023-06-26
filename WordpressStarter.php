@@ -5,6 +5,14 @@ use WpStarter\Wordpress\Plugins\Loader as PluginsLoader;
 final class WordpressStarter
 {
     /**
+     * Run priority at init hook, default is 1 for better performance.
+     * However, it's possible that we may miss some initializations from other plugins.
+     * In such cases, we can consider moving to a lower priority by using
+     * a higher number than the default value in WordPress, for example, 11.
+     * @var int
+     */
+    protected $priority=1;
+    /**
      * @var \WpStarter\Foundation\Application
      */
     protected $app;
@@ -12,8 +20,13 @@ final class WordpressStarter
      * @var WpStarter\Wordpress\Kernel | WpStarter\Wordpress\Console\Kernel
      */
     protected $kernel;
-
+    /**
+     * @var boolean flag that WpStarter is booted or not
+     */
     protected $booted;
+    /**
+     * @var WordpressStarter hold instance of WordpressStarter
+     */
     static protected $instance;
 
     /**
@@ -118,7 +131,7 @@ final class WordpressStarter
              $this->kernel->handle(
                 $request, true
             );
-        }, 1);
+        }, $this->priority);
 
     }
 
