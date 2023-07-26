@@ -24,6 +24,7 @@ final class WordpressStarter
      * @var boolean flag that WpStarter is booted or not
      */
     protected $booted;
+
     /**
      * @var WordpressStarter hold instance of WordpressStarter
      */
@@ -45,7 +46,14 @@ final class WordpressStarter
     {
         $this->boot();
     }
-
+    /**
+     * Run WpStarter Application
+     * @return void
+     */
+    function run(){
+        $this->boot();
+        add_action('init',[$this,'handle'],$this->priority);
+    }
     /**
      * Create application and kernel based on current env
      * Will try to bootstrap application when it runs inside WordPress
@@ -63,12 +71,11 @@ final class WordpressStarter
         }else{
             $this->kernel = $this->app->make(WpStarter\Contracts\Http\Kernel::class);
         }
-        if(class_exists(PluginsLoader::class)){
-            $this->checkForPluginsLoader();
-            PluginsLoader::getInstance()->run();
+        if(!$this->isRunningInConsole()){
+            $this->bootWeb();
         }
-        add_action('ws_loaded',[$this->kernel,'earlyBootstrap'],1);
-        add_action('plugins_loaded',[$this->kernel,'bootstrap'],1);
+        add_action('ws_loaded',[$this,'bootCore'],1);
+        add_action('plugins_loaded',[$this,'bootKernel'],1);
         if(!did_action('mu_plugin_loaded')) {
             add_action('mu_plugin_loaded', function (){
                 do_action('ws_loaded',$this);
@@ -76,6 +83,63 @@ final class WordpressStarter
         }else{
             do_action('ws_loaded',$this);
         }
+    }
+    function bootCore(){
+        $this->kernel->earlyBootstrap();
+        $this->bootPluginsLoader();
+
+    }
+    /**
+     * Boot the web part
+     * @return void
+     */
+    function bootWeb(){
+        $this->checkMaintenance();
+        $request = Request::capture();
+        $this->app->instance('request', $request);
+    }
+    /**
+     * Run kernel bootstrap
+     * @return void
+     */
+    function bootKernel(){
+        /**
+         * ws_boot run before kernel bootstrap to allow third-party plugins register a custom provider
+         */
+        do_action('ws_boot',$this->app,$this->kernel);
+        $this->kernel->bootstrap();
+    }
+
+    /**
+     * Main application handler
+     * @return void
+     */
+    function handle(){
+        if($this->isRunningInConsole()){
+            $this->handleCli();
+        }else{
+            $this->handleWeb();
+        }
+    }
+
+    /**
+     * Handle cli application
+     * @return void
+     */
+    protected function handleCli()
+    {
+        //Cli will be handled from artisan
+    }
+
+    /**
+     * Handle web application
+     * @return void
+     */
+    protected function handleWeb()
+    {
+        $this->kernel->handle(
+            $this->app['request'], true
+        );
     }
 
     /**
@@ -97,44 +161,9 @@ final class WordpressStarter
     }
 
     /**
-     * Run WpStarter Application
-     * @return void
+     * Check if application is running in console
+     * @return bool
      */
-    function run(){
-        $this->boot();
-        if ($this->isRunningInConsole()) {
-            $this->runCli();
-        } else {
-            $this->runWeb();
-        }
-
-    }
-
-    function checkForPluginsLoader(){
-        if (file_exists($loader = WS_DIR.'/app/PluginsLoader.php')) {
-            require $loader;
-        }
-    }
-
-    protected function runCli()
-    {
-        //Nothing to run here
-    }
-
-
-    protected function runWeb()
-    {
-        $this->checkMaintenance();
-        $request = Request::capture();
-        $this->app->instance('request', $request);
-        add_action('init', function ()use($request) {
-             $this->kernel->handle(
-                $request, true
-            );
-        }, $this->priority);
-
-    }
-
     protected function isRunningInConsole(){
         if(defined('WS_CLI') && WS_CLI){
             return true;
@@ -146,6 +175,17 @@ final class WordpressStarter
             return $_ENV['APP_RUNNING_IN_CONSOLE'] === 'true';
         }
         return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
+    }
+
+    /**
+     * Check and load PluginsLoader if exists
+     * @return void
+     */
+    protected function bootPluginsLoader(){
+        if (class_exists(PluginsLoader::class) && file_exists($loader = WS_DIR.'/app/PluginsLoader.php')) {
+            PluginsLoader::getInstance()->run();
+            require $loader;
+        }
     }
 
     /**
