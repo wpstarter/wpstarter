@@ -5,13 +5,14 @@ use WpStarter\Wordpress\Plugins\Loader as PluginsLoader;
 final class WordpressStarter
 {
     /**
-     * Run priority at init hook, default is 1 for better performance.
+     * Default hook to handle WpStarter request
+     * We use WordPress init hook and priority is 1 for better performance.
      * However, it's possible that we may miss some initializations from other plugins.
      * In such cases, we can consider moving to a lower priority by using
      * a higher number than the default value in WordPress, for example, 11.
      * @var int
      */
-    protected $priority=1;
+    protected $defaultHook='init:1';
     /**
      * @var \WpStarter\Foundation\Application
      */
@@ -52,7 +53,13 @@ final class WordpressStarter
      */
     function run(){
         $this->boot();
-        add_action('init',[$this,'handle'],$this->priority);
+        if($this->isRunningInConsole()) {//Cli only handle once at default hook
+            $hook=$this->parseHook($this->defaultHook);
+            add_action($hook[0], [$this, 'handleCli'], $hook[1]);
+        }else{
+            //After application booted and all routes registered, we can register web handler
+            add_action('ws_booted',[$this,'registerWebHandler']);
+        }
     }
     /**
      * Create application and kernel based on current env
@@ -72,7 +79,7 @@ final class WordpressStarter
             $this->kernel = $this->app->make(WpStarter\Contracts\Http\Kernel::class);
         }
         if(!$this->isRunningInConsole()){
-            $this->bootWeb();
+            $this->initWeb();
         }
         add_action('ws_loaded',[$this,'bootCore'],1);
         add_action('plugins_loaded',[$this,'bootKernel'],1);
@@ -84,20 +91,21 @@ final class WordpressStarter
             do_action('ws_loaded',$this);
         }
     }
+    /**
+     * Init the web request
+     * @return void
+     */
+    function initWeb(){
+        $this->checkMaintenance();
+        $request = Request::capture();
+        $this->app->instance('request', $request);
+    }
     function bootCore(){
         $this->kernel->earlyBootstrap();
         $this->bootPluginsLoader();
 
     }
-    /**
-     * Boot the web part
-     * @return void
-     */
-    function bootWeb(){
-        $this->checkMaintenance();
-        $request = Request::capture();
-        $this->app->instance('request', $request);
-    }
+
     /**
      * Run kernel bootstrap
      * @return void
@@ -108,25 +116,39 @@ final class WordpressStarter
          */
         do_action('ws_boot',$this->app,$this->kernel);
         $this->kernel->bootstrap();
+        do_action('ws_booted',$this->app,$this->kernel);
     }
 
     /**
-     * Main application handler
+     * Register multiple hooks web handler
      * @return void
      */
-    function handle(){
-        if($this->isRunningInConsole()){
-            $this->handleCli();
-        }else{
-            $this->handleWeb();
+    function registerWebHandler(){
+        $hooks=[$this->defaultHook];
+        $hooks=array_merge($hooks,$this->getHooksFromRoutes($this->app['router']->getRoutes()));
+        //$hooks=array_merge($hooks,$this->getHooksFromRoutes($this->app['wp.router']->getRoutes()));
+        $hooks=array_unique($hooks);
+        foreach ($hooks as $hook){
+            $hook=$this->parseHook($hook);
+            add_action($hook[0],[$this,'handleWeb'],$hook[1]);
         }
     }
+    protected function getHooksFromRoutes(\WpStarter\Routing\RouteCollection $routes){
+        $hooks=[];
+        foreach ($routes->getRoutes() as $route){
+            if($hook=$route->getAction('hook')){
+                $hooks[]=$hook;
+            }
+        };
+        return $hooks;
+    }
+
 
     /**
      * Handle cli application
      * @return void
      */
-    protected function handleCli()
+    public function handleCli()
     {
         //Cli will be handled from artisan
     }
@@ -135,7 +157,7 @@ final class WordpressStarter
      * Handle web application
      * @return void
      */
-    protected function handleWeb()
+    public function handleWeb()
     {
         $this->kernel->handle(
             $this->app['request'], true
@@ -199,5 +221,19 @@ final class WordpressStarter
         if (file_exists($maintenance = WS_DIR.'/storage/framework/maintenance.php')) {
             require $maintenance;
         }
+    }
+
+    protected function parseHook($hook){
+        if(!is_array($hook)){
+            $hook=explode(':',$hook);
+        }
+        if(!isset($hook[0])){
+            $hook[0]='init';
+        }
+        if(!isset($hook[1])){
+            $hook[1]=10;
+        }
+        $hook[1]=intval($hook[1]);
+        return $hook;
     }
 }
