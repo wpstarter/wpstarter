@@ -126,6 +126,11 @@ final class WordpressStarter
      * @return void
      */
     function registerWebHandler(){
+        /**
+         * As we use new request for handle web, we need to rebind request
+         * so that rebind hook can be called
+         */
+        $this->app->instance('request',$this->app['request']);
         if(is_admin()){
             return ;
         }
