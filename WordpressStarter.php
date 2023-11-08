@@ -98,6 +98,8 @@ final class WordpressStarter
     function initWeb(){
         $this->checkMaintenance();
         $request = Request::capture();
+        //Temporary setup new request for earlybootstrap and plugins loader
+        $this->app->instance('request.main', $request);
         $this->app->instance('request', $request);
     }
     function bootCore(){
@@ -124,6 +126,9 @@ final class WordpressStarter
      * @return void
      */
     function registerWebHandler(){
+        if(is_admin()){
+            return ;
+        }
         $hooks=[$this->defaultHook];
         $hooks=array_merge($hooks,$this->getHooksFromRoutes($this->app['router']->getRoutes()));
         //$hooks=array_merge($hooks,$this->getHooksFromRoutes($this->app['wp.router']->getRoutes()));
@@ -160,7 +165,7 @@ final class WordpressStarter
     public function handleWeb()
     {
         $this->kernel->handle(
-            $this->app['request'], true
+            Request::capture(), true
         );
     }
 
