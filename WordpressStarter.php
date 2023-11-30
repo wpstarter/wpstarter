@@ -83,8 +83,8 @@ final class WordpressStarter
         }
         add_action('ws_loaded',[$this,'bootCore'],1);
         add_action('plugins_loaded',[$this,'bootKernel'],1);
-        if(!did_action('mu_plugin_loaded')) {
-            add_action('mu_plugin_loaded', function (){
+        if(!did_action('muplugins_loaded')) {
+            add_action('muplugins_loaded', function (){
                 do_action('ws_loaded',$this);
             }, 1);
         }else{
