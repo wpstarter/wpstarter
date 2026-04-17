@@ -143,7 +143,7 @@ final class WordpressStarter
             add_action($hook[0],[$this,'handleWeb'],$hook[1]);
         }
     }
-    protected function getHooksFromRoutes(\WpStarter\Routing\RouteCollection $routes){
+    protected function getHooksFromRoutes(\WpStarter\Routing\AbstractRouteCollection $routes){
         $hooks=[];
         foreach ($routes->getRoutes() as $route){
             if($hook=$route->getAction('hook')){
