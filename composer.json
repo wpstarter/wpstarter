@@ -7,10 +7,10 @@
   "prefer-stable": true,
   "type": "project",
   "require": {
-    "php": "^7.3|^8.0",
+    "php": "^8.2",
     "ext-openssl": "*",
     "ext-json": "*",
-    "wpstarter/framework": "^1.6.1",
+    "wpstarter/framework": "2.x-dev",
     "ext-pdo": "*"
   },
   "require-dev": {
