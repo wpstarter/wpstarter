@@ -29,10 +29,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware('web')
                 ->group(ws_base_path('routes/web.php'));
 
-            WpRoute::namespace($this->namespace)
-                ->middleware('web')
-                ->group(ws_base_path('routes/wp.php'));
         });
+        //Wp routes are not cached
+        WpRoute::namespace($this->namespace)
+            ->middleware('web')
+            ->group(ws_base_path('routes/wp.php'));
     }
 
     /**
