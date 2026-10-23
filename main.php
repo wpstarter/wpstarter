@@ -1,7 +1,7 @@
 <?php
 /***
  * Plugin name: WpStarter
- * Version:     1.0.4
+ * Version:     2.x.x
  * Description: WpStarter Plugin
  * Author:      As247
  * Author URI:  https://github.com/as247
