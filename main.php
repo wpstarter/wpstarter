@@ -21,7 +21,7 @@ if(!defined('__WS_FILE__') && defined('ABSPATH')) {//Safe load
     if (!defined('WS_DIR')) {
         define('WS_DIR', __DIR__);
     }
-    require __DIR__.'/bootstrap/autoload.php';
+    require __DIR__.'/autoload.php';
     if (!wp_installing()) {
         WordpressStarter::make()->run();
     }

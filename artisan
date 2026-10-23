@@ -49,7 +49,7 @@ if(!defined('WS_DIR')) {
  */
 
 if(defined('WS_DIR')) {
-    require WS_DIR . '/bootstrap/autoload.php';
+    require WS_DIR . '/autoload.php';
     $app=WordpressStarter::make()->app();
 }
 /**
