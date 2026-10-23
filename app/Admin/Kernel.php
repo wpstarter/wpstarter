@@ -14,12 +14,12 @@ class Kernel extends AdminKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
-        \App\Http\Middleware\TrustProxies::class,
+        // \WpStarter\Http\Middleware\TrustProxiesTrustHosts::class,
+        \WpStarter\Http\Middleware\TrustProxies::class,
         //\Fruitcake\Cors\HandleCors::class,
-        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \WpStarter\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \WpStarter\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
+        \WpStarter\Foundation\Http\Middleware\TrimStrings::class,
         \WpStarter\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
@@ -30,17 +30,17 @@ class Kernel extends AdminKernel
      */
     protected $middlewareGroups = [
         'admin' => [
-            \App\Http\Middleware\EncryptCookies::class,
+            \WpStarter\Cookie\Middleware\EncryptCookies::class,
             \WpStarter\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \WpStarter\Wordpress\Middleware\StartSession::class,
             \WpStarter\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            \WpStarter\Foundation\Http\Middleware\VerifyCsrfToken::class,
         ],
     ];
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => \WpStarter\Auth\Middleware\Authenticate::class,
         'cache.headers' => \WpStarter\Http\Middleware\SetCacheHeaders::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest' => \WpStarter\Auth\Middleware\RedirectIfAuthenticated::class,
         'signed' => \WpStarter\Routing\Middleware\ValidateSignature::class,
         'throttle' => \WpStarter\Routing\Middleware\ThrottleRequests::class,
     ];
