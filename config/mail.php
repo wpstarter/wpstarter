@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => ws_env('MAIL_MAILER', 'wp_mail'),
+    'default' => ws_env('MAIL_MAILER', is_wp()?'wp_mail':'log'),
 
     /*
     |--------------------------------------------------------------------------

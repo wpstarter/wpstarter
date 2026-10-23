@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'default' => defined('ABSPATH') ? ws_env('DB_CONNECTION', 'wpdb') : 'mysql',
+    'default' => is_wp() ? ws_env('DB_CONNECTION', 'wpdb') : 'mysql',
 
     /*
     |--------------------------------------------------------------------------

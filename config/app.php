@@ -180,33 +180,8 @@ return [
         // Package Service Providers...
         WpStarter\Wordpress\WordpressServiceProvider::class,
     ])->merge([
-        /*
-         * Application Service Providers...
-         */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        App\Providers\SettingServiceProvider::class,
-        App\Admin\AdminServiceProvider::class,
-    ])->merge([
         // Added Service Providers (Do not remove this line)...
     ])->toArray(),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Class Aliases
-    |--------------------------------------------------------------------------
-    |
-    | This array of class aliases will be registered when this application
-    | is started. You may add any additional class aliases which should
-    | be loaded to the array. For speed, all aliases are lazy loaded.
-    |
-    */
-
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
-    ])->toArray(),
 
 ];

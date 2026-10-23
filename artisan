@@ -1,8 +1,13 @@
+#!/usr/bin/env php
 <?php
+
+use Symfony\Component\Console\Input\ArgvInput;
 /**
  * We are in CLI
  */
 define('WS_CLI',true);
+
+define('LARAVEL_START', microtime(true));
 
 /**
  * -----------------
@@ -45,12 +50,12 @@ if(!defined('WS_DIR')) {
 
 if(defined('WS_DIR')) {
     require WS_DIR . '/bootstrap/autoload.php';
-    $kernel=WordpressStarter::make()->kernel();
+    $app=WordpressStarter::make()->app();
 }
 /**
  * Cannot obtain kernel exit with code 255
  */
-if(empty($kernel)){
+if(empty($app)){
     echo "\033[33mWordpress not found, please install WpStarter inside WordPress directory \033[0m".PHP_EOL;
     exit(255) ;
 }
@@ -65,33 +70,6 @@ if( (!defined('WS_CLI_ALWAYS_ENABLED') || !WS_CLI_ALWAYS_ENABLED)//Not always en
     echo "\033[33mThe plugin is not activated\033[0m".PHP_EOL;
     exit(254) ;
 }
-/*
-|--------------------------------------------------------------------------
-| Run The Artisan Application
-|--------------------------------------------------------------------------
-|
-| When we run the console application, the current CLI command will be
-| executed in this console and the response sent back to a terminal
-| or another output device for the developers. Here goes nothing!
-|
-*/
-
-$status = $kernel->handle(
-    $input = new Symfony\Component\Console\Input\ArgvInput,
-    new Symfony\Component\Console\Output\ConsoleOutput
-);
-
-/*
-|--------------------------------------------------------------------------
-| Shutdown The Application
-|--------------------------------------------------------------------------
-|
-| Once Artisan has finished running, we will fire off the shutdown events
-| so that any final work may be done by the application before we shut
-| down the process. This is the last thing to happen to the request.
-|
-*/
-
-$kernel->terminate($input, $status);
+$status = $app->handleCommand(new ArgvInput);
 
 exit($status);

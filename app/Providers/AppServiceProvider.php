@@ -6,6 +6,7 @@ use App\View\Shortcodes\SampleShortcode;
 use WpStarter\Support\ServiceProvider;
 use WpStarter\Wordpress\Facades\L10n;
 use WpStarter\Wordpress\Facades\Livewire;
+use WpStarter\Wordpress\Facades\Route as WpRoute;
 use WpStarter\Wordpress\Facades\Shortcode;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,9 @@ class AppServiceProvider extends ServiceProvider
     {
         L10n::loadDomain('app',ws_resource_path('lang'));
         Shortcode::add(SampleShortcode::class);
+        //Wp routes are not cached
+        WpRoute::middleware('web')
+            ->group(ws_base_path('routes/wp.php'));
         /**
          * Add js and css for livewire
          * Adding here will add style/script globally
