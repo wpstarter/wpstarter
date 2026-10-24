@@ -1,6 +1,6 @@
 @extends('admin::layout')
 @section('content')
-    <h2>This is sample page you can remove it in {{ws_app_path('Admin/admin.php')}}</h2>
+    <h2>This is sample page you can remove it in {{ws_app_path('Admin/routes/admin.php')}}</h2>
     <form method="post">
         @csrf
         <input type="hidden" name="action" value="save">
