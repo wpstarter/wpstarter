@@ -10,7 +10,7 @@
     "php": "^8.2",
     "ext-openssl": "*",
     "ext-json": "*",
-    "wpstarter/framework": "^2.2.6",
+    "wpstarter/framework": "^2.2.7",
     "ext-pdo": "*"
   },
   "require-dev": {
