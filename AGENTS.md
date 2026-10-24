@@ -1,10 +1,13 @@
 # Project context
 
-`wpstarter/wpstarter` is a WordPress plugin/application skeleton using the Laravel-style `wpstarter/framework`. See `README.md` for setup and layout.
+`wpstarter/wpstarter` is an application skeleton for building WordPress plugins with Laravel-style architecture, powered by `wpstarter/framework`. WordPress hosts the application. See `README.md` for setup and layout. Paths below are relative to the project root unless stated otherwise.
 
-- Runtime framework: `vendor/wpstarter/framework/`; classes: `src/WpStarter/`, WordPress integration: `src/WpStarter/Wordpress/` within that package. Read its `AGENTS.md` when investigating framework behavior.
-- Separate local framework checkout: `D:/wpstarter/framework`; changes there do not automatically affect this app.
-- Entry/lifecycle: `main.php`, `WordpressStarter.php`, `bootstrap/`. Put application changes in `app/`, `routes/`, `resources/`, and `config/`; edit framework only for framework tasks.
-- Use `WpStarter\` imports and existing `ws_*` helpers; verify APIs in installed source. Preserve WordPress hook timing, users, and database integration.
-- Route facades: HTTP `WpStarter\Support\Facades\Route`; shortcode `WpStarter\Wordpress\Facades\Route`; admin `WpStarter\Wordpress\Admin\Facades\Route`.
-- Lint changed PHP; run relevant checks when available. PHPUnit requires the testbench bootstrap referenced by `phpunit.xml`. Report unrun checks; finish with `git diff --check`.
+- Follow existing application patterns: routes, controllers, middleware, service providers, and Blade views. Inspect nearby examples and reuse existing code before introducing abstractions or dependencies.
+- Use `WpStarter\` for framework imports, contracts, and type hints, and existing `ws_*` helpers such as `ws_view()` and `ws_route()`. Verify names and signatures; do not mechanically copy `Illuminate\` imports or Laravel global helpers, or assume Laravel packages work unchanged.
+- Use Laravel-style services for application structure and WordPress APIs for WordPress-owned data and behavior. Preserve WordPress users, capabilities, database integration, and hook timing; check authorization and validate input for state-changing actions.
+- Entry/lifecycle: `main.php`, `WordpressStarter.php`, `bootstrap/`. Put application code in `app/`, routes in `routes/` and `app/Admin/routes/`, views/assets in `resources/` and `app/Admin/resources/`, and configuration in `config/`. Change bootstrap or framework code only when the task requires it.
+- Choose the correct route facade: HTTP `WpStarter\Support\Facades\Route` in `routes/web.php` or `routes/api.php`; shortcode `WpStarter\Wordpress\Facades\Route` in `routes/wp.php`; admin `WpStarter\Wordpress\Admin\Facades\Route` in `app/Admin/routes/admin.php`.
+- Follow existing rendering examples: `ws_view()` for standalone views, `content_view()` for WordPress post content, and `shortcode_view()` for shortcode output.
+- Verify framework APIs in the installed `vendor/wpstarter/framework/` source. Classes are under `src/WpStarter/`, with WordPress integration under `src/WpStarter/Wordpress/` within that package. Read its `AGENTS.md`, if present, for framework work, and inspect only the components relevant to the task. Laravel documentation is background; the installed implementation is authoritative.
+- Check available Artisan commands with `php artisan list` or command-specific `--help` when needed; use existing generators where applicable. Do not assume standalone Laravel commands or tooling are installed.
+- Lint changed PHP and run focused checks for changed behavior using the project's available tools. PHPUnit requires the testbench bootstrap referenced by `phpunit.xml`; report missing prerequisites and unrun checks. Finish with `git diff --check`.
