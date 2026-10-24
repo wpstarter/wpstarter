@@ -43,8 +43,7 @@ final class WordpressStarter
         return self::$instance;
     }
 
-    function __construct()
-    {
+    function __construct(){
         $this->boot();
     }
     /**
@@ -52,12 +51,7 @@ final class WordpressStarter
      * @return void
      */
     function run(){
-        $this->boot();
-        if($this->isRunningInConsole()) {//Cli only handle once at default hook
-            $hook=$this->parseHook($this->defaultHook);
-            add_action($hook[0], [$this, 'handleCli'], $hook[1]);
-        }else{
-            //After application booted and all routes registered, we can register web handler
+        if(!$this->app->runningInConsole()) {
             add_action('ws_booted',[$this,'registerWebHandler']);
         }
     }
@@ -71,15 +65,14 @@ final class WordpressStarter
         if($this->booted){
             return;
         }
+        $this->checkMaintenance();
         $this->booted=true;
         $this->app = require WS_DIR . '/bootstrap/app.php';
-        if ($this->isRunningInConsole()) {
+        if ($this->app->runningInConsole()) {
             $this->kernel = $this->app->make(WpStarter\Contracts\Console\Kernel::class);
         }else{
             $this->kernel = $this->app->make(WpStarter\Contracts\Http\Kernel::class);
-        }
-        if(!$this->isRunningInConsole()){
-            $this->initWeb();
+            $this->initializeHttpRequest();
         }
         add_action('ws_loaded',[$this,'bootCore'],1);
         add_action('plugins_loaded',[$this,'bootKernel'],1);
@@ -92,20 +85,16 @@ final class WordpressStarter
         }
     }
     /**
-     * Init the web request
+     * Init request
      * @return void
      */
-    function initWeb(){
-        $this->checkMaintenance();
+    protected function initializeHttpRequest(){
         $request = Request::capture();
-        //Temporary setup new request for earlybootstrap and plugins loader
-        $this->app->instance('request.main', $request);
         $this->app->instance('request', $request);
     }
     function bootCore(){
         $this->kernel->earlyBootstrap();
         $this->bootPluginsLoader();
-
     }
 
     /**
@@ -126,11 +115,6 @@ final class WordpressStarter
      * @return void
      */
     function registerWebHandler(){
-        /**
-         * As we use new request for handle web, we need to rebind request
-         * so that rebind hook can be called
-         */
-        $this->app->instance('request',$this->app['request']);
         if(is_admin()){
             return ;
         }
@@ -143,25 +127,7 @@ final class WordpressStarter
             add_action($hook[0],[$this,'handleWeb'],$hook[1]);
         }
     }
-    protected function getHooksFromRoutes(\WpStarter\Routing\AbstractRouteCollection $routes){
-        $hooks=[];
-        foreach ($routes->getRoutes() as $route){
-            if($hook=$route->getAction('hook')){
-                $hooks[]=$hook;
-            }
-        };
-        return $hooks;
-    }
 
-
-    /**
-     * Handle cli application
-     * @return void
-     */
-    public function handleCli()
-    {
-        //Cli will be handled from artisan
-    }
 
     /**
      * Handle web application
@@ -170,7 +136,7 @@ final class WordpressStarter
     public function handleWeb()
     {
         $this->kernel->handle(
-            Request::capture(), true
+            $this->app['request'], true
         );
     }
 
@@ -192,21 +158,14 @@ final class WordpressStarter
         return $this->kernel;
     }
 
-    /**
-     * Check if application is running in console
-     * @return bool
-     */
-    protected function isRunningInConsole(){
-        if(defined('WS_CLI') && WS_CLI){
-            return true;
-        }
-        if(defined('WP_CLI') && WP_CLI){
-            return true;
-        }
-        if (isset($_ENV['APP_RUNNING_IN_CONSOLE'])) {
-            return $_ENV['APP_RUNNING_IN_CONSOLE'] === 'true';
-        }
-        return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
+    protected function getHooksFromRoutes(\WpStarter\Routing\AbstractRouteCollection $routes){
+        $hooks=[];
+        foreach ($routes->getRoutes() as $route){
+            if($hook=$route->getAction('hook')){
+                $hooks[]=$hook;
+            }
+        };
+        return $hooks;
     }
 
     /**
@@ -215,7 +174,11 @@ final class WordpressStarter
      */
     protected function bootPluginsLoader(){
         if (class_exists(PluginsLoader::class) && file_exists($loader = WS_DIR.'/app/PluginsLoader.php')) {
-            PluginsLoader::getInstance()->run();
+            $pluginLoader=PluginsLoader::getInstance();
+            if($this->app->bound('request')){
+                $pluginLoader->setRequest($this->app['request']);
+            }
+            $pluginLoader->run();
             require $loader;
         }
     }
@@ -228,7 +191,7 @@ final class WordpressStarter
      * @return void
      */
     protected function checkMaintenance(){
-        if (file_exists($maintenance = WS_DIR.'/storage/framework/maintenance.php')) {
+        if (!$this->isRunningInConsole() && file_exists($maintenance = WS_DIR.'/storage/framework/maintenance.php')) {
             require $maintenance;
         }
     }
@@ -245,5 +208,21 @@ final class WordpressStarter
         }
         $hook[1]=intval($hook[1]);
         return $hook;
+    }
+    /**
+     * Check if application is running in console
+     * @return bool
+     */
+    protected function isRunningInConsole(){
+        if(defined('WS_CLI') && WS_CLI){
+            return true;
+        }
+        if(defined('WP_CLI') && WP_CLI){
+            return true;
+        }
+        if (isset($_ENV['APP_RUNNING_IN_CONSOLE'])) {
+            return $_ENV['APP_RUNNING_IN_CONSOLE'] === 'true';
+        }
+        return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
     }
 }
