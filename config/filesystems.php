@@ -32,7 +32,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => ws_storage_path('app'),
+            'root' => ws_storage_path('app/private'),
         ],
 
         'public' => [
