@@ -3,6 +3,7 @@
 `wpstarter/wpstarter` is an application skeleton for building WordPress plugins with Laravel-style architecture, powered by `wpstarter/framework`. WordPress hosts the application. See `README.md` for setup and layout. Paths below are relative to the project root unless stated otherwise.
 
 - Follow existing application patterns: routes, controllers, middleware, service providers, and Blade views. Inspect nearby examples and reuse existing code before introducing abstractions or dependencies.
+- Write code that is easy for human developers to read and maintain, not just for an agent to revisit. Use your judgment to choose an appropriate structure and level of abstraction for the task.
 - Use `WpStarter\` for framework imports, contracts, and type hints, and existing `ws_*` helpers such as `ws_view()` and `ws_route()`. Verify names and signatures; do not mechanically copy `Illuminate\` imports or Laravel global helpers, or assume Laravel packages work unchanged.
 - Use Laravel-style services for application structure and WordPress APIs for WordPress-owned data and behavior. Preserve WordPress users, capabilities, database integration, and hook timing; check authorization and validate input for state-changing actions.
 - Entry/lifecycle: `main.php`, `WordpressStarter.php`, `bootstrap/`. Put application code in `app/`, routes in `routes/` and `app/Admin/routes/`, views/assets in `resources/` and `app/Admin/resources/`, and configuration in `config/`. Change bootstrap or framework code only when the task requires it.

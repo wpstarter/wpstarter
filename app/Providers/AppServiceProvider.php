@@ -30,9 +30,6 @@ class AppServiceProvider extends ServiceProvider
     {
         L10n::loadDomain('app',ws_resource_path('lang'));
         Shortcode::add(SampleShortcode::class);
-        //Wp routes are not cached
-        WpRoute::middleware('web')
-            ->group(ws_base_path('routes/wp.php'));
         /**
          * Add js and css for livewire
          * Adding here will add style/script globally
